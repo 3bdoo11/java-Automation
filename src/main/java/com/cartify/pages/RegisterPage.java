@@ -108,10 +108,6 @@ public class RegisterPage extends BasePage {
         click(nextButton2);
     }
 
-    private void clickVisibleNext() {
-        // Deprecated or unused now, but keeping if needed for generic next
-    }
-
     public void fillAddress(String street, String city, String state) {
         type(streetAddressInput, street);
         type(cityInput, city);
