@@ -14,19 +14,20 @@ public class ProfileTest extends BaseTest {
     public void setUpPage() {
         loginPage = new LoginPage(driver);
         profilePage = new ProfilePage(driver);
-        
+
         // Register a new user first to ensure they exist
         com.cartify.pages.RegisterPage registerPage = new com.cartify.pages.RegisterPage(driver);
         registerPage.open();
-        String email = "profiletest" + System.currentTimeMillis() + "@test.com";
+        String uniqueId = java.util.UUID.randomUUID().toString().substring(0, 8);
+        String email = "profiletest" + uniqueId + "@test.com";
         String password = "ValidPass123@";
-        registerPage.fillAccountInfo(email, "ProfileUser", password);
+        registerPage.fillAccountInfo(email, "ProfileUser" + uniqueId, password);
         registerPage.fillPersonalInfo("Test", "User", "1234567890");
         registerPage.selectGender(true);
         registerPage.fillDate("01/01/2000");
         registerPage.clickNext();
-        registerPage.fillAddress("123 Test St", "Test City", "Test State");
-        
+        registerPage.fillAddress("123 Test St", "Test City", "Test State", "12345", "Test Country");
+
         // Now login
         loginPage.open();
         loginPage.login(email, password);
@@ -35,14 +36,15 @@ public class ProfileTest extends BaseTest {
     @Test(description = "TC-U-1.3: Profile Update Confirmation")
     public void testProfileUpdate() {
         profilePage.open();
-        // If popup appears saying "need to login", then login failed or session not shared.
+        // If popup appears saying "need to login", then login failed or session not
+        // shared.
         // Assuming session is shared in same driver instance.
-        
+
         if (!profilePage.isProfileLoaded()) {
             // Try to handle the popup or assert failure if login didn't work
-             Assert.fail("Profile page did not load, possibly login failed or popup blocked access");
+            Assert.fail("Profile page did not load, possibly login failed or popup blocked access");
         }
-        
+
         // Implement update logic if locators were found
         // Since I only have placeholders, I'll assert the page loaded for now
         Assert.assertTrue(profilePage.isProfileLoaded(), "Profile page should be loaded");

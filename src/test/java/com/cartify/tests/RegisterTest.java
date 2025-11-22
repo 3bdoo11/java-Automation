@@ -17,8 +17,9 @@ public class RegisterTest extends BaseTest {
 
     @Test(description = "TC-U-1.1: Valid Registration Submission")
     public void testValidRegistration() {
-        String email = "newuser" + System.currentTimeMillis() + "@test.com";
-        String username = "User" + System.currentTimeMillis();
+        String uniqueId = java.util.UUID.randomUUID().toString().substring(0, 8);
+        String email = "newuser" + uniqueId + "@test.com";
+        String username = "User" + uniqueId;
 
         // Step 1: Account Info
         registerPage.fillAccountInfo(email, username, "ValidPass123@");
@@ -31,7 +32,7 @@ public class RegisterTest extends BaseTest {
         registerPage.clickNext();
 
         // Step 3: Address Info
-        registerPage.fillAddress("123 Test St", "Test City", "Test State");
+        registerPage.fillAddress("123 Test St", "Test City", "Test State", "12345", "Test Country");
 
         // Verification: Check if redirected or success message appears
         Assert.assertFalse(driver.getCurrentUrl().contains("register.html"),
@@ -40,8 +41,9 @@ public class RegisterTest extends BaseTest {
 
     @Test(description = "TC-U-1.9: Verify Address Step Submission")
     public void testAddressSubmission() {
-        String email = "addressuser" + System.currentTimeMillis() + "@test.com";
-        String username = "AddrUser" + System.currentTimeMillis();
+        String uniqueId = java.util.UUID.randomUUID().toString().substring(0, 8);
+        String email = "addressuser" + uniqueId + "@test.com";
+        String username = "AddrUser" + uniqueId;
 
         // Pre-requisites: Get to Address Step
         registerPage.fillAccountInfo(email, username, "ValidPass123@");
@@ -52,7 +54,7 @@ public class RegisterTest extends BaseTest {
 
         // Verify we are on the address step (optional, check for an element)
         // Then fill and submit
-        registerPage.fillAddress("456 Sample Ave", "Sample City", "Sample State");
+        registerPage.fillAddress("456 Sample Ave", "Sample City", "Sample State", "67890", "Sample Country");
 
         // Assert success
         Assert.assertFalse(driver.getCurrentUrl().contains("register.html"),

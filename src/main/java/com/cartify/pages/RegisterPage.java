@@ -1,10 +1,10 @@
 package com.cartify.pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class RegisterPage extends BasePage {
 
@@ -52,6 +52,12 @@ public class RegisterPage extends BasePage {
     @FindBy(css = "input[placeholder='State']")
     private WebElement stateInput;
 
+    @FindBy(css = "input[placeholder='Zip Code']")
+    private WebElement zipCodeInput;
+
+    @FindBy(css = "input[placeholder='Country']")
+    private WebElement countryInput;
+
     // Buttons
     @FindBy(id = "next1")
     private WebElement nextButton1;
@@ -92,26 +98,54 @@ public class RegisterPage extends BasePage {
     }
 
     public void selectGender(boolean isMale) {
+        System.out.println("Selecting gender: " + (isMale ? "Male" : "Female"));
         if (isMale) {
             click(maleRadio);
         } else {
             click(femaleRadio);
         }
+        System.out.println("Gender selected");
     }
 
     public void fillDate(String date) {
+        System.out.println("Filling date: " + date);
         type(birthDateInput, date);
-        driver.findElement(By.tagName("body")).click(); // Click empty space to close date picker
+        birthDateInput.sendKeys(org.openqa.selenium.Keys.TAB);
+        System.out.println("Date filled and tabbed");
     }
 
     public void clickNext() {
+        System.out.println("Clicking next2");
+        if (isDisplayed(errorMessage)) {
+            System.out.println("Error message displayed BEFORE clicking next2: " + getText(errorMessage));
+        }
+        // Ensure button is clickable
+        wait.until(ExpectedConditions.elementToBeClickable(nextButton2));
         click(nextButton2);
+        System.out.println("Clicked next2");
+
+        if (isDisplayed(errorMessage)) {
+            System.out.println("Error message displayed AFTER clicking next2: " + getText(errorMessage));
+        }
+        // Wait for address step to be visible
+        try {
+            wait.until(ExpectedConditions.visibilityOf(zipCodeInput));
+            System.out.println("Zip code input is now visible");
+        } catch (Exception e) {
+            System.out.println("Zip code input NOT visible after clicking next2");
+        }
     }
 
-    public void fillAddress(String street, String city, String state) {
+    public void fillAddress(String street, String city, String state, String zip, String country) {
+        System.out.println("Current URL: " + driver.getCurrentUrl());
+        if (isDisplayed(errorMessage)) {
+            System.out.println("Error message displayed: " + getText(errorMessage));
+        }
         type(streetAddressInput, street);
         type(cityInput, city);
         type(stateInput, state);
+        type(zipCodeInput, zip);
+        type(countryInput, country);
         click(submitButton);
     }
 
